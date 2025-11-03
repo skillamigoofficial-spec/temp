@@ -513,33 +513,38 @@
     "description": ""
   }
 ,
-    "Quick Sort Parallel OpenMP": {
-        "scope": "java",
+    
+    "QuickSort Parallel OpenMP": {
         "prefix": "b_quick_omp",
+        "scope": "java",
+
         "body": [
-            "/*Quick sort */",
-            "",
+
             "#include <bits/stdc++.h>",
             "#include <omp.h>",
             "using namespace std;",
             "",
-            "void quickSort(vector<int>& arr, int low, int high) {",
-            "    if (low < high) {",
-            "        int pivot = arr[high];",
-            "        int i = low - 1;",
-            "        #pragma omp parallel for shared(arr, pivot, i)",
-            "        for (int j = low; j < high; j++) {",
-            "            if (arr[j] < pivot) {",
-            "                #pragma omp critical",
-            "                swap(arr[++i], arr[j]);",
-            "            }",
+            "int partition(vector<int> &arr, int low, int high) {",
+            "    int pivot = arr[high];",
+            "    int i = low - 1;",
+            "    for (int j = low; j < high; j++) {",
+            "        if (arr[j] < pivot) {",
+            "            i++;",
+            "            swap(arr[i], arr[j]);",
             "        }",
-            "        swap(arr[i + 1], arr[high]);",
-            "        int pi = i + 1;",
+            "    }",
+            "    swap(arr[i + 1], arr[high]);",
+            "    return i + 1;",
+            "}",
+            "",
+            "void quickSort(vector<int> &arr, int low, int high) {",
+            "    if (low < high) {",
+            "        int pi = partition(arr, low, high);",
             "        #pragma omp parallel sections",
             "        {",
             "            #pragma omp section",
             "            quickSort(arr, low, pi - 1);",
+            "",
             "            #pragma omp section",
             "            quickSort(arr, pi + 1, high);",
             "        }",
@@ -548,17 +553,22 @@
             "",
             "int main() {",
             "    vector<int> arr = {34, 7, 23, 32, 5, 62, 32, 12, 22, 9};",
-            "    double start = omp_get_wtime();",
+            "    double start, end;",
+            "    start = omp_get_wtime();",
             "    quickSort(arr, 0, arr.size() - 1);",
-            "    double end = omp_get_wtime();",
+            "    end = omp_get_wtime();",
+            "",
             "    cout << \"Quick Sorted Array: \";",
             "    for (auto x : arr) cout << x << \" \";",
-            "    cout << \"\\nQuick Sort Time: \" << end - start << \" seconds\\n\";",
+            "    cout << \"\\nParallel Time: \" << end - start << \" seconds\\n\";",
+            "",
             "    return 0;",
             "}"
         ],
         "description": ""
     }
+
+
 ,
     "MPI Ping Pong": {
         "scope": "java",
