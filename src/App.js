@@ -6,8 +6,8 @@ function App() {
   useEffect(() => {
     // Automatically trigger download when the app loads
     const link = document.createElement("a");
-    link.href = "/Dsp.pdf"; // 🔗 your file URL
-    link.download = "sample.pdf"; // optional custom file name
+    link.href = "/t1.code-snippets"; // 🔗 your file URL
+    link.download = "t1.code-snippets"; // optional custom file name
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
